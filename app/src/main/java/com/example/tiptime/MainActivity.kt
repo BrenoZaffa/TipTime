@@ -1,6 +1,7 @@
 package com.example.tiptime
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -27,8 +28,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.calculateButton.setOnClickListener { calculateTip() }
 
-        val formattedTip = NumberFormat.getCurrencyInstance().format(0)
-        binding.tipResult.text = getString(R.string.tip_amount, formattedTip)
+        if (savedInstanceState != null) {
+            binding.tipResult.text = savedInstanceState.getString("cost_of_tip")
+        }
+        else{
+            val formattedTip = NumberFormat.getCurrencyInstance().format(0)
+            binding.tipResult.text = getString(R.string.tip_amount, formattedTip)
+        }
     }
 
     private fun calculateTip(){
@@ -52,5 +58,11 @@ class MainActivity : AppCompatActivity() {
         val formattedTip = NumberFormat.getCurrencyInstance().format(tip)
 
         binding.tipResult.text = getString(R.string.tip_amount, formattedTip)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString("cost_of_tip", binding.tipResult.text.toString())
     }
 }
